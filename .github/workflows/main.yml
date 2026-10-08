@@ -1,0 +1,35 @@
+name: Deploy PHP to cPanel
+
+on:
+  push:
+    branches:
+      - main   # Cambia a 'master' si esa es tu rama principal
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Traer el código del repositorio
+      - name: 📥 Checkout del código
+        uses: actions/checkout@v4
+
+      # 2. Subir los archivos directamente a cPanel vía FTP
+      - name: 🚀 Desplegar PHP a cPanel vía FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+
+          # Subir todo el proyecto (carpeta raíz)
+          local-dir: ./
+
+          # Carpeta destino en el hosting
+          server-dir: /public_html/ventory/sys/v5/backend
+
+          port: 21
+          protocol: ftp
+
+          # No borrar archivos del servidor
+          dangerous-clean-slate: false
